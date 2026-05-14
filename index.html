@@ -1,0 +1,625 @@
+<!DOCTYPE html><html lang='ja'><head>
+<meta charset='UTF-8'>
+<title>デザイン室制作ギャラリー</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, Helvetica, sans-serif;
+        margin: 0;
+        background: #f7f6f5;
+        position: relative;
+    }
+
+    .header {
+        padding: 30px 30px 16px;
+        background: #f7f6f5;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+        z-index: 10;
+    }
+
+    .bg-footsteps {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .bg-footsteps::before {
+        content: "";
+        position: absolute;
+        top: 120px;
+        left: 20px;
+        width: 200px;
+        height: 200px;
+        background: url('decor_br.png') no-repeat center / contain;
+        opacity: 0.4;
+        transform: rotate(180deg);
+    }
+
+    .bg-footsteps::after {
+        content: "";
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 220px;
+        height: 220px;
+        background: url('decor_tl.png') no-repeat center / contain;
+        opacity: 0.4;
+        transform: rotate(180deg);
+    }
+
+    .header,
+    .search-box,
+    .filter,
+    .sorter,
+    .grid {
+        position: relative;
+        z-index: 10;
+    }
+
+    .header h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .header-description {
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 18px;
+    }
+
+    .search-box {
+        max-width: 1200px;
+        margin: 30px auto 20px;
+        padding: 0 16px;
+        display: flex;
+        gap: 10px;
+        box-sizing: border-box;
+    }
+
+    #searchInput {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #fff;
+    }
+
+    .filter {
+        margin: 10px auto 6px;
+        max-width: 1200px;
+        padding: 0 16px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .filter button {
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid #aaa;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .filter button.active {
+        background: #ffe5cc;
+        border-color: #ff9900;
+    }
+
+    .sorter {
+        margin: 8px 0 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .sorter button {
+        padding: 6px 14px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        background: #fff;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .sorter button.active {
+        background: #ffe5cc;
+        border-color: #ff9900;
+    }
+
+    .grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 16px;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 18px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 1200px) {
+        .grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 900px) {
+        .grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 600px) {
+        .header {
+            padding: 24px 16px 14px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+        }
+
+        .header-description {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            padding: 16px;
+            gap: 12px;
+        }
+
+        .card {
+            padding: 12px;
+        }
+
+        .card-title {
+            font-size: 12px;
+        }
+
+        .card-meta {
+            font-size: 11px;
+        }
+    }
+
+    .card {
+        min-width: 0;
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #e4e4e4;
+        box-shadow: 0 3px 7px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 120px;
+        transition: 0.15s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        word-break: break-all;
+        margin-bottom: 6px;
+    }
+
+    .card-meta {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.5;
+    }
+
+    .card-actions {
+        text-align: right;
+        margin-top: 10px;
+    }
+
+    .card-actions a {
+        display: inline-block;
+        white-space: nowrap;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid #bbb;
+        background: #fff;
+        text-decoration: none;
+        color: #333;
+        font-size: 13px;
+    }
+
+    .thumb {
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 10px;
+        background: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        cursor: zoom-in;
+    }
+
+    .empty-message {
+        display: none;
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        text-align: center;
+        color: #777;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e4e4e4;
+        position: relative;
+        z-index: 10;
+    }
+
+    .empty-message.show {
+        display: block;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.7);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal.active {
+        display: flex;
+    }
+
+    .modal-content {
+        max-width: 90vw;
+        max-height: 90vh;
+        background: #fff;
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .modal-content img {
+        max-width: 85vw;
+        max-height: 80vh;
+        object-fit: contain;
+        border-radius: 12px;
+    }
+
+    .modal-close {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #666;
+        cursor: pointer;
+    }
+
+    #scrollTopBtn {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: #ff9900;
+        color: #fff;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        z-index: 99999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    #scrollTopBtn.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    </style>
+</head><body>
+<div class="bg-footsteps"></div>
+<div class="header">
+<h1>● デザイン室 制作ギャラリー ●</h1>
+
+<div class="header-description">
+    デザイン室の制作履歴ギャラリーです。気に入ったものがあれば、キントーンからご依頼ください。
+</div>
+
+</div>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="ファイル名で検索">
+</div>
+
+<div class="filter">
+<button data-cat="ALL" class="active">すべて（8）</button>
+<button data-cat="パチンコ事業部" class="">パチンコ事業部（7）</button>
+<button data-cat="サービスエリア事業部" class="">サービスエリア事業部（1）</button>
+</div>
+<div class="sorter">
+<button id="sort-newest" class="active">新しい順</button>
+<button id="sort-oldest">古い順</button>
+</div>
+<div id="emptyMessage" class="empty-message">該当する画像がありません</div>
+<div class="grid">
+
+<div class="card" data-filename="20260508_天美_No6180.webp" data-cat="サービスエリア事業部" data-date="2026-05-08">
+    <div class="thumb">
+        <img src="webp_images/20260508_天美_No6180.webp" alt="20260508_天美_No6180.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260508_天美_No6180.webp</div>
+    <div class="card-meta">カテゴリ：サービスエリア事業部 （2026-05-08）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1NdTrZNxXL2vDzW69k5gGpqR7cBBqVd5G/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260508_本店_No6186.webp" data-cat="パチンコ事業部" data-date="2026-05-08">
+    <div class="thumb">
+        <img src="webp_images/20260508_本店_No6186.webp" alt="20260508_本店_No6186.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260508_本店_No6186.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-08）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1o-QgHYvKyARCYK0s8ukCIjdYOhVQIv3i/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260508_梅田_No6134.webp" data-cat="パチンコ事業部" data-date="2026-05-08">
+    <div class="thumb">
+        <img src="webp_images/20260508_梅田_No6134.webp" alt="20260508_梅田_No6134.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260508_梅田_No6134.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-08）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1y0EMvLIikq5B6asjssFCMVSSb2dr7tXM/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260510_hep_No6141.webp" data-cat="パチンコ事業部" data-date="2026-05-10">
+    <div class="thumb">
+        <img src="webp_images/20260510_hep_No6141.webp" alt="20260510_hep_No6141.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260510_hep_No6141.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-10）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1J7f7tdqJKgvgmYfdNdYOISsGMXG9nIhD/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260510_シアター_No6220.webp" data-cat="パチンコ事業部" data-date="2026-05-10">
+    <div class="thumb">
+        <img src="webp_images/20260510_シアター_No6220.webp" alt="20260510_シアター_No6220.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260510_シアター_No6220.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-10）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1mJwLBJ7OKi4Cw5_LNVkp9KkwbUUbvUSE/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260511_hep_No6209.webp" data-cat="パチンコ事業部" data-date="2026-05-11">
+    <div class="thumb">
+        <img src="webp_images/20260511_hep_No6209.webp" alt="20260511_hep_No6209.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260511_hep_No6209.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-11）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1DZwuNjb99U-U3Q8WsQUt_eyBwfOuA6k0/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260512_air_No6206.webp" data-cat="パチンコ事業部" data-date="2026-05-12">
+    <div class="thumb">
+        <img src="webp_images/20260512_air_No6206.webp" alt="20260512_air_No6206.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260512_air_No6206.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-12）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1gtbrxbaYFayQhPTD0qRuRni7CLsJzxV6/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+
+<div class="card" data-filename="20260512_air_No6208.webp" data-cat="パチンコ事業部" data-date="2026-05-12">
+    <div class="thumb">
+        <img src="webp_images/20260512_air_No6208.webp" alt="20260512_air_No6208.webp" loading="lazy">
+    </div>
+    <div class="card-title">20260512_air_No6208.webp</div>
+    <div class="card-meta">カテゴリ：パチンコ事業部 （2026-05-12）</div>
+    <div class="card-actions">
+        <a href="https://drive.google.com/file/d/1DRB5Z8oTZI7Mq7sEq11tyn5s_J6E4H7r/view" target="_blank" rel="noopener">画像を開く</a>
+    </div>
+</div>
+
+</div>
+
+<div id="imageModal" class="modal">
+    <div class="modal-content">
+        <img id="modalImage" src="" alt="">
+        <div class="modal-close">クリックで閉じる</div>
+    </div>
+</div>
+
+<div style='padding:40px 0;text-align:center;font-size:13px;color:#666;'>最終更新：2026-05-14 12:42</div>
+<button id='scrollTopBtn' title='上へ戻る'>↑</button>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = Array.from(document.querySelectorAll(".card"));
+        const filterBtns = Array.from(document.querySelectorAll(".filter button"));
+        const newestBtn = document.getElementById("sort-newest");
+        const oldestBtn = document.getElementById("sort-oldest");
+        const searchInput = document.getElementById("searchInput");
+        const emptyMessage = document.getElementById("emptyMessage");
+
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImage");
+
+        let currentIndex = -1;
+
+        function getActiveFilter() {
+            return document.querySelector(".filter button.active")?.dataset.cat || "ALL";
+        }
+
+        function getVisibleCards() {
+            return cards.filter(card => card.style.display !== "none");
+        }
+
+        function update() {
+            const activeFilter = getActiveFilter();
+            const keyword = searchInput ? searchInput.value.toLowerCase() : "";
+
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.dataset.filename.toLowerCase();
+                const cat = card.dataset.cat;
+
+                let visible = true;
+
+                if (activeFilter !== "ALL" && cat !== activeFilter) visible = false;
+                if (keyword && !text.includes(keyword)) visible = false;
+
+                card.style.display = visible ? "" : "none";
+                if (visible) visibleCount += 1;
+            });
+
+            if (emptyMessage) {
+                emptyMessage.classList.toggle("show", visibleCount === 0);
+            }
+        }
+
+        function sortCards(order) {
+            const grid = document.querySelector(".grid");
+
+            const sorted = [...cards].sort((a, b) => {
+                const da = a.dataset.date || "";
+                const db = b.dataset.date || "";
+                const fa = a.dataset.filename || "";
+                const fb = b.dataset.filename || "";
+
+                const keyA = da || fa;
+                const keyB = db || fb;
+
+                return order === "asc"
+                    ? keyA.localeCompare(keyB)
+                    : keyB.localeCompare(keyA);
+            });
+
+            sorted.forEach(c => grid.appendChild(c));
+
+            newestBtn.classList.toggle("active", order === "desc");
+            oldestBtn.classList.toggle("active", order === "asc");
+
+            update();
+        }
+
+        function openModalAt(index) {
+            const visibleCards = getVisibleCards();
+            if (!visibleCards.length) return;
+
+            currentIndex = (index + visibleCards.length) % visibleCards.length;
+            const img = visibleCards[currentIndex].querySelector("img");
+
+            modalImg.src = img.src;
+            modal.classList.add("active");
+        }
+
+        cards.forEach(card => {
+            const img = card.querySelector("img");
+            img.addEventListener("click", () => {
+                const visibleCards = getVisibleCards();
+                openModalAt(visibleCards.indexOf(card));
+            });
+        });
+
+        document.addEventListener("keydown", e => {
+            if (!modal.classList.contains("active")) return;
+
+            if (e.key === "ArrowRight") openModalAt(currentIndex + 1);
+            if (e.key === "ArrowLeft") openModalAt(currentIndex - 1);
+            if (e.key === "Escape") {
+                modal.classList.remove("active");
+                modalImg.src = "";
+            }
+        });
+
+        modal.addEventListener("click", e => {
+            if (e.target === modal) {
+                modal.classList.remove("active");
+                modalImg.src = "";
+            }
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                filterBtns.forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                update();
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener("input", () => {
+                update();
+            });
+        }
+
+        newestBtn.addEventListener("click", () => sortCards("desc"));
+        oldestBtn.addEventListener("click", () => sortCards("asc"));
+
+        sortCards("desc");
+
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add("show");
+            } else {
+                scrollTopBtn.classList.remove("show");
+            }
+        });
+
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    });
+    </script>
+</body></html>
