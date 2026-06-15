@@ -6,25 +6,32 @@
   <title>デザイン室制作ギャラリー</title>
   <style>
     :root {
-      --brand: #e50012;
+      /*
+        3枚目のパレット寄せ：
+        #FFFFFF / #FFF1F2 / #FFF7F0 / やさしい赤
+      */
+      --brand: #ff6b6e;
+      --brand-deep: #e95a5d;
       --brand-soft: #fff1f2;
-      --brand-soft-2: #fff7f7;
-      --brand-shadow: rgba(229, 0, 18, 0.18);
+      --brand-soft-2: #fff7f0;
+      --brand-shadow: rgba(255, 107, 110, 0.18);
       --ink: #151515;
       --text: #303030;
       --muted: #777;
       --line: rgba(20, 20, 20, 0.10);
-      --card: rgba(255, 255, 255, 0.92);
-      --bg: #fff8f1;
-      --bg2: #fffdf9;
+      --card: rgba(255, 255, 255, 0.94);
+      --chip-bg: #f2f3f5;
+      --chip-text: #6f737a;
+      --chip-border: rgba(0, 0, 0, 0.06);
+      --bg: #f3f4f6;
+      --bg2: #fbfbfc;
 
       /*
-        メインビジュアルを後で入れる場合はここを差し替え。
-        例：
-        --hero-image: url("main_visual.webp");
-        画像ファイルは publish/ 直下へ置けばOK。
+        ヒーロー画像：
+        auto-gallery-designroom/top.jpg を置くと、
+        publish/top.jpg に自動コピーされてここで表示される。
       */
-      --hero-image: none;
+      --hero-image: url("top.jpg");
     }
 
     * {
@@ -39,9 +46,9 @@
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
       background:
-        radial-gradient(circle at 10% 0%, rgba(229, 0, 18, 0.08), transparent 34%),
-        radial-gradient(circle at 90% 10%, rgba(255, 197, 95, 0.22), transparent 30%),
-        linear-gradient(180deg, var(--bg2), #ffffff 32%, #fffaf4);
+        radial-gradient(circle at 12% 0%, rgba(232, 235, 239, 0.72), transparent 32%),
+        radial-gradient(circle at 90% 8%, rgba(241, 243, 245, 0.78), transparent 30%),
+        linear-gradient(180deg, #fbfbfc 0%, #ffffff 34%, #f3f4f6 100%);
       color: var(--text);
     }
 
@@ -59,7 +66,7 @@
       top: 0;
       z-index: 50;
       backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.84);
       border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
 
@@ -86,7 +93,7 @@
       height: 11px;
       border-radius: 999px;
       background: var(--brand);
-      box-shadow: 0 0 0 6px rgba(229, 0, 18, 0.10);
+      box-shadow: 0 0 0 6px rgba(255, 107, 110, 0.12);
     }
 
     .nav-links {
@@ -104,7 +111,7 @@
     }
 
     .nav-links a:hover {
-      color: var(--brand);
+      color: var(--brand-deep);
       opacity: 1;
     }
 
@@ -116,18 +123,18 @@
       position: relative;
       overflow: hidden;
       border-radius: 30px;
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid rgba(255, 255, 255, 0.82);
-      box-shadow: 0 22px 60px rgba(67, 31, 20, 0.10);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 22px 58px rgba(40, 46, 56, 0.10);
     }
 
     .hero-visual {
       min-height: clamp(260px, 34vw, 420px);
       position: relative;
       background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.52) 42%, rgba(255, 247, 247, 0.44)),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.34) 42%, rgba(255, 255, 255, 0.10)),
         var(--hero-image),
-        linear-gradient(135deg, #fff2f3 0%, #fff8e8 42%, #eaf7ff 100%);
+        linear-gradient(135deg, #ffffff 0%, #fff7f0 42%, #eef6fb 100%);
       background-size: cover;
       background-position: center;
       display: grid;
@@ -141,21 +148,22 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at 18% 22%, rgba(229, 0, 18, 0.12) 0 2px, transparent 3px),
-        radial-gradient(circle at 78% 20%, rgba(229, 0, 18, 0.10) 0 2px, transparent 3px),
-        radial-gradient(circle at 65% 74%, rgba(255, 188, 79, 0.24) 0 3px, transparent 4px);
+        radial-gradient(circle at 18% 22%, rgba(255, 107, 110, 0.08) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 20%, rgba(255, 107, 110, 0.07) 0 2px, transparent 3px),
+        radial-gradient(circle at 65% 74%, rgba(255, 220, 184, 0.16) 0 3px, transparent 4px);
       background-size: 120px 120px, 160px 160px, 180px 180px;
-      opacity: 0.9;
+      opacity: 0.36;
     }
 
     .hero-copy {
       position: relative;
       z-index: 2;
-      max-width: 560px;
+      max-width: 680px;
     }
 
     .hero-kicker {
-      display: inline-flex;
+      display: none !important;
+      visibility: hidden;
       align-items: center;
       gap: 8px;
       margin: 0 0 16px;
@@ -176,10 +184,11 @@
     .hero-title {
       margin: 0;
       color: var(--ink);
-      font-size: clamp(34px, 5vw, 64px);
+      font-size: clamp(34px, 4.2vw, 58px);
       line-height: 1.08;
       letter-spacing: 0.01em;
       font-weight: 950;
+      white-space: nowrap;
     }
 
     .hero-title .red {
@@ -210,7 +219,7 @@
       min-height: 48px;
       padding: 0 22px;
       border-radius: 999px;
-      background: linear-gradient(135deg, #ff4d58, var(--brand));
+      background: linear-gradient(135deg, #ff8a8d, var(--brand));
       color: #fff;
       text-decoration: none;
       font-weight: 900;
@@ -220,7 +229,7 @@
 
     .primary-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 18px 34px rgba(229, 0, 18, 0.24);
+      box-shadow: 0 18px 34px rgba(255, 107, 110, 0.26);
     }
 
     .hero-note {
@@ -236,7 +245,7 @@
       z-index: 2;
       width: clamp(96px, 14vw, 174px);
       aspect-ratio: 1 / 1;
-      display: grid;
+      display: none;
       place-items: center;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.68);
@@ -309,9 +318,9 @@
       margin: 28px 0 24px;
       padding: 20px;
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      box-shadow: 0 16px 40px rgba(60, 30, 20, 0.07);
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.055);
+      box-shadow: 0 16px 38px rgba(40, 46, 56, 0.075);
     }
 
     .search-row {
@@ -351,8 +360,8 @@
 
     .search-input:focus {
       background: #fff;
-      border-color: rgba(229, 0, 18, 0.45);
-      box-shadow: 0 0 0 5px rgba(229, 0, 18, 0.08);
+      border-color: rgba(255, 107, 110, 0.42);
+      box-shadow: 0 0 0 5px rgba(255, 107, 110, 0.10);
     }
 
     .sort-group {
@@ -390,7 +399,7 @@
     .sort-btn:hover {
       transform: translateY(-1px);
       background: var(--brand-soft-2);
-      border-color: rgba(229, 0, 18, 0.30);
+      border-color: rgba(255, 107, 110, 0.28);
     }
 
     .filter-btn.active,
@@ -398,7 +407,7 @@
       background: var(--brand);
       border-color: var(--brand);
       color: #fff;
-      box-shadow: 0 10px 20px rgba(229, 0, 18, 0.18);
+      box-shadow: 0 10px 20px rgba(255, 107, 110, 0.18);
     }
 
     .filter-btn.active span {
@@ -433,7 +442,7 @@
       padding: 10px 14px;
       border-radius: 999px;
       background: var(--brand-soft);
-      color: var(--brand);
+      color: var(--brand-deep);
       font-size: 13px;
       font-weight: 950;
     }
@@ -454,16 +463,16 @@
       text-decoration: none;
       color: inherit;
       background: var(--card);
-      border: 1px solid rgba(0, 0, 0, 0.07);
+      border: 1px solid rgba(0, 0, 0, 0.065);
       border-radius: 22px;
-      box-shadow: 0 12px 30px rgba(70, 30, 20, 0.08);
+      box-shadow: 0 12px 28px rgba(40, 46, 56, 0.075);
       transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
     }
 
     .gallery-card:hover {
       transform: translateY(-5px);
-      border-color: rgba(229, 0, 18, 0.28);
-      box-shadow: 0 20px 42px rgba(70, 30, 20, 0.14);
+      border-color: rgba(255, 107, 110, 0.24);
+      box-shadow: 0 20px 42px rgba(40, 46, 56, 0.13);
     }
 
     .gallery-card.is-hidden {
@@ -480,8 +489,8 @@
       width: 100%;
       aspect-ratio: 4 / 3;
       background:
-        radial-gradient(circle at 18% 18%, rgba(229, 0, 18, 0.08), transparent 28%),
-        linear-gradient(135deg, #f7f7f7, #efefef);
+        radial-gradient(circle at 18% 18%, rgba(238, 240, 243, 0.70), transparent 28%),
+        linear-gradient(135deg, #f8f9fa, #eef0f3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -529,17 +538,17 @@
     .type-badge {
       left: 12px;
       top: 12px;
-      color: #333;
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid rgba(255, 255, 255, 0.80);
+      color: #555b63;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     .youtube-badge {
       right: 12px;
       top: 12px;
       color: #fff;
-      background: rgba(229, 0, 18, 0.90);
-      box-shadow: 0 8px 18px rgba(229, 0, 18, 0.22);
+      background: rgba(255, 107, 110, 0.92);
+      box-shadow: 0 8px 18px rgba(255, 107, 110, 0.22);
     }
 
     .play-mark {
@@ -554,8 +563,8 @@
       display: grid;
       place-items: center;
       color: #fff;
-      background: rgba(229, 0, 18, 0.92);
-      box-shadow: 0 14px 30px rgba(229, 0, 18, 0.32);
+      background: rgba(255, 107, 110, 0.94);
+      box-shadow: 0 14px 30px rgba(255, 107, 110, 0.30);
       transition: transform 0.24s ease;
     }
 
@@ -582,10 +591,11 @@
       max-width: 100%;
       padding: 6px 9px;
       border-radius: 999px;
-      background: var(--brand-soft);
-      color: var(--brand);
+      background: #f2f3f5;
+      color: #6f737a;
+      border: 1px solid rgba(0, 0, 0, 0.06);
       font-size: 11px;
-      font-weight: 950;
+      font-weight: 800;
       line-height: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -642,11 +652,11 @@
       background: #fff;
       color: var(--brand);
       cursor: pointer;
-      box-shadow: 0 16px 34px rgba(60, 20, 20, 0.20);
+      box-shadow: 0 16px 34px rgba(40, 46, 56, 0.18);
       display: none;
       z-index: 999;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border: 1px solid rgba(229, 0, 18, 0.12);
+      border: 1px solid rgba(255, 107, 110, 0.16);
     }
 
     .scroll-top.show {
@@ -749,6 +759,8 @@
 
       .hero-title {
         max-width: 320px;
+        white-space: normal;
+        font-size: clamp(32px, 10vw, 44px);
       }
 
       .hero-lead {
@@ -830,18 +842,18 @@
           <div class="hero-visual">
             <div class="hero-copy">
               <p class="hero-kicker">DESIGN ROOM WORKS</p>
-              <h1 class="hero-title">つくる、を<span class="red">楽しく</span>。</h1>
+              <h1 class="hero-title">つくるを<span class="red">楽しく</span>。</h1>
               <p class="hero-lead">
                 デザイン室の制作履歴ギャラリーです。気に入ったものがあれば、キントーンからご依頼ください。
               </p>
               <div class="hero-actions">
-                <a class="primary-btn" href="#works">作品一覧を見る <span aria-hidden="true">→</span></a>
-                <span class="hero-note">画像も動画も、ここからまとめて探せます。</span>
+                <a class="primary-btn" href="https://kohmei.cybozu.com/k/#/space/25" target="_blank" rel="noopener noreferrer">キントーンで発注する <span aria-hidden="true">→</span></a>
+                <span class="hero-note">ご依頼、お待ちしております</span>
               </div>
             </div>
 
             <div class="hero-placeholder" aria-hidden="true">
-              メインビジュアル差し替えスペース
+              top.jpg 表示中
             </div>
 
             <div class="panda-hero" aria-hidden="true">
@@ -23975,7 +23987,7 @@
       </div>
 
       <p class="footer-note">
-        最終更新：2026-06-15 13:40
+        最終更新：2026-06-15 17:43
       </p>
     </section>
   </main>
